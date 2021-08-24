@@ -21,8 +21,6 @@ routes.post("/", (req, res, next) => {
   const created = Date.now();
   const updated = created;
 
-  console.log(req.body);
-
   const article = new Article({
     title: title,
     description: description,
