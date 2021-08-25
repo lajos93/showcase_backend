@@ -1,6 +1,5 @@
 const express = require("express");
-const bcrypt = require("bcryptjs");
-const crypto = require("crypto");
+const bcrypt = require("bcrypt");
 const routes = express.Router();
 
 const User = require("../models/user");
@@ -23,25 +22,19 @@ routes.post("/", (req, res, next) => {
           message: "User already exists",
         });
       } else {
-        return bcrypt.hash(password, 12).then((hashedPassword) => {
-          crypto.randomBytes(32, (err, buffer) => {
-            if (err) {
-              res.json({
-                message: "Server error",
-              });
-            }
-            const token = buffer.toString("hex");
-            const user = new User({
-              username: username,
-              email: email,
-              password: hashedPassword,
-              token: token,
-            });
-            user.save().then((userData) => {
-              const userObj = userData.toObject();
-              delete userObj.password;
-              res.json({ user: userObj });
-            });
+        bcrypt.hash(password, 12).then((hashedPassword) => {
+          const user = new User({
+            username: username,
+            email: email,
+            password: hashedPassword,
+          });
+          user.save().then((userData) => {
+            const token = require("../shared/token")(user.email, user._id);
+
+            const userObj = userData.toObject();
+            delete userObj.password;
+            userObj.token = token;
+            res.json({ user: userObj });
           });
         });
       }
@@ -49,10 +42,6 @@ routes.post("/", (req, res, next) => {
     .catch((error) => {
       console.log(error);
     });
-
-  /*   user.save().then((result) => {
-    res.json(result);
-  }); */
 });
 
 module.exports = routes;

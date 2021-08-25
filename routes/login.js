@@ -1,6 +1,5 @@
 const express = require("express");
 const bcrypt = require("bcryptjs");
-const crypto = require("crypto");
 const routes = express.Router();
 
 const User = require("../models/user");
@@ -20,19 +19,12 @@ routes.post("/", (req, res, next) => {
           .compare(password, user.password)
           .then((match) => {
             if (match) {
-              crypto.randomBytes(32, (err, buffer) => {
-                if (err) {
-                  res.json({
-                    message: "Server error",
-                  });
-                }
-                const token = buffer.toString("hex");
-                const userObj = user.toObject();
-                delete userObj.password;
-                userObj.token = token;
+              const token = require("../shared/token")(user.email, user._id);
+              const userObj = user.toObject();
+              delete userObj.password;
 
-                res.json({ user: userObj });
-              });
+              userObj.token = token;
+              res.json({ user: userObj });
             } else {
               res.json({
                 message: "Password is incorrect",
@@ -41,7 +33,7 @@ routes.post("/", (req, res, next) => {
           })
           .catch((error) => {
             res.json({
-              message: "Server error",
+              message: "Internal server error",
             });
           });
       }
