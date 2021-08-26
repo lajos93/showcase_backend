@@ -22,7 +22,6 @@ routes.post("/", (req, res, next) => {
             if (match) {
               const jwt = token.getToken(user.email, user._id);
               const userObj = user.toObject();
-              delete userObj.password;
 
               userObj.token = jwt;
               res.json({ user: userObj });
