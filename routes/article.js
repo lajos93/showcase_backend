@@ -14,7 +14,7 @@ routes.get("/", (req, res, next) => {
   });
 });
 
-routes.post("/", (req, res, next) => {
+routes.post("/", token.verifyToken, (req, res, next) => {
   const title = req.body.title.trim();
   const slug = functions.createSlug(title);
   const description = req.body.description;
