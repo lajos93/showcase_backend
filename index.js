@@ -13,6 +13,7 @@ app.use(express.json());
 const articleRoutes = require("./routes/article");
 const userRoutes = require("./routes/user");
 const loginRoute = require("./routes/login");
+const error = require("./routes/error");
 
 app.use(cors());
 
@@ -21,12 +22,7 @@ app.use("/api/users", userRoutes);
 app.use("/api/login", loginRoute);
 
 //404 error
-app.use((req, res, next) => {
-  res.status(404).json({
-    message: "Not Found",
-    errorCode: "404",
-  });
-});
+app.use(error);
 
 mongoose
   .connect("mongodb://localhost/test")

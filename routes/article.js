@@ -40,7 +40,7 @@ routes.post("/", (req, res, next) => {
   });
 });
 
-routes.put("/:slug", (req, res, next) => {
+routes.put("/:slug", token.verifyToken, (req, res, next) => {
   const slug = req.params.slug;
 
   const title = req.body.title;

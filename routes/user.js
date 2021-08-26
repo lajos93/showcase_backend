@@ -5,7 +5,7 @@ const token = require("../shared/token");
 
 const User = require("../models/user");
 
-routes.get("/", (req, res, next) => {
+routes.get("/", token.verifyToken, (req, res, next) => {
   User.find({}, function (err, users) {
     res.json(users);
   });
