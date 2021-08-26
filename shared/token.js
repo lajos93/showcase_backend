@@ -15,4 +15,4 @@ function getToken(email, id) {
   return token;
 }
 
-module.exports = getToken;
+module.exports = { getToken: getToken };
