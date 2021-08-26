@@ -1,5 +1,6 @@
 const express = require("express");
 const cors = require("cors");
+const db = require("./db/db");
 
 const app = express();
 
@@ -25,7 +26,7 @@ app.use("/api/login", loginRoute);
 app.use(error);
 
 mongoose
-  .connect("mongodb://localhost/test")
+  .connect(db)
   .then((result) => {
     app.listen(3001);
   })
