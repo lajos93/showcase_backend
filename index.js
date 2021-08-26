@@ -1,5 +1,5 @@
-const http = require("http");
 const express = require("express");
+const cors = require("cors");
 
 const app = express();
 
@@ -14,19 +14,7 @@ const articleRoutes = require("./routes/article");
 const userRoutes = require("./routes/user");
 const loginRoute = require("./routes/login");
 
-app.use(function (req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Methods", "DELETE, PUT");
-  res.header(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept"
-  );
-  if ("OPTIONS" == req.method) {
-    res.sendStatus(200);
-  } else {
-    next();
-  }
-});
+app.use(cors());
 
 app.use("/api/articles", articleRoutes);
 app.use("/api/users", userRoutes);

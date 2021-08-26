@@ -6,7 +6,6 @@ const user = new Schema({
   email: { type: String, required: true },
   image: { type: String, required: false },
   bio: { type: String, required: false },
-  token: { type: String, required: false },
   password: { type: String, required: true },
 });
 
