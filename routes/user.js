@@ -16,10 +16,14 @@ routes.post("/", (req, res, next) => {
   const email = req.body.email;
   const password = req.body.password;
 
+  if (!username || !email || !password) {
+    return res.json({ message: "username or email is required" });
+  }
+
   User.findOne({ $or: [{ email: email }, { username: username }] })
     .then((result) => {
       if (result) {
-        res.json({
+        return res.json({
           message: "User already exists",
         });
       } else {
@@ -34,13 +38,13 @@ routes.post("/", (req, res, next) => {
 
             const userObj = userData.toObject();
             userObj.token = jwt;
-            res.json({ user: userObj });
+            return res.json({ user: userObj });
           });
         });
       }
     })
     .catch((error) => {
-      console.log(error);
+      return res.json({ message: "Internal server error" });
     });
 });
 

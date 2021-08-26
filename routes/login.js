@@ -24,22 +24,22 @@ routes.post("/", (req, res, next) => {
               const userObj = user.toObject();
 
               userObj.token = jwt;
-              res.json({ user: userObj });
+              return res.json({ user: userObj });
             } else {
-              res.json({
+              return res.json({
                 message: "Password is incorrect",
               });
             }
           })
           .catch((error) => {
-            res.json({
+            return res.json({
               message: "Internal server error",
             });
           });
       }
     })
     .catch((error) => {
-      console.log(error);
+      return res.json({ message: "Internal server error" });
     });
 });
 

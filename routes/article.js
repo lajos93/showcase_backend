@@ -3,10 +3,11 @@ const routes = express.Router();
 const functions = require("../shared/functions");
 
 const Article = require("../models/article");
+const token = require("../shared/token");
 
 routes.get("/", (req, res, next) => {
   Article.find({}, function (err, articles) {
-    res.json({
+    return res.json({
       articles: articles,
       articlesCount: articles.length,
     });
@@ -35,7 +36,7 @@ routes.post("/", (req, res, next) => {
   });
 
   article.save().then((result) => {
-    res.json(result);
+    return res.json(result);
   });
 });
 
@@ -65,19 +66,26 @@ routes.put("/:slug", (req, res, next) => {
     { $set: update },
     {
       new: true,
-      upsert: true,
+      upsert: false,
     }
   ).then((result) => {
-    res.json(result);
+    if (!result) {
+      return res.json({ message: "Article is not found" });
+    }
+
+    return res.json(result);
   });
 });
 
-routes.delete("/:slug", (req, res, next) => {
+routes.delete("/:slug", token.verifyToken, (req, res, next) => {
   const slug = req.params.slug;
   const filter = { slug: slug };
 
   Article.findOneAndDelete(filter).then((result) => {
-    res.json(result);
+    if (!result) {
+      return res.json({ message: "Article is not found" });
+    }
+    return res.json(result);
   });
 });
 
