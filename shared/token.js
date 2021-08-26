@@ -21,6 +21,7 @@ function verifyToken(req, res, next) {
   if (bearerHeader) {
     const bearer = bearerHeader.split(" ");
     const bearerToken = bearer[1];
+    res.locals.token = bearerToken;
 
     jwt.verify(bearerToken, secret.value, (err, verifiedJwt) => {
       if (err) {
@@ -36,4 +37,20 @@ function verifyToken(req, res, next) {
   }
 }
 
-module.exports = { getToken: getToken, verifyToken: verifyToken };
+function getDataFromToken(token) {
+  const decodedToken = jwt.decode(token, {
+    complete: true,
+  });
+
+  if (!decodedToken) {
+    res.json({ message: "Provided token does not decode as JWT" });
+  }
+
+  return decodedToken;
+}
+
+module.exports = {
+  getToken: getToken,
+  verifyToken: verifyToken,
+  getDataFromToken: getDataFromToken,
+};

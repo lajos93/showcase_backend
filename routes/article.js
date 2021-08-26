@@ -70,7 +70,7 @@ routes.put("/:slug", token.verifyToken, (req, res, next) => {
     }
   ).then((result) => {
     if (!result) {
-      return res.json({ message: "Article is not found" });
+      return res.status(403).json({ message: "Article is not found" });
     }
 
     return res.json(result);
@@ -83,7 +83,7 @@ routes.delete("/:slug", token.verifyToken, (req, res, next) => {
 
   Article.findOneAndDelete(filter).then((result) => {
     if (!result) {
-      return res.json({ message: "Article is not found" });
+      return res.status(403).json({ message: "Article is not found" });
     }
     return res.json(result);
   });

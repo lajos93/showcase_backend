@@ -48,4 +48,22 @@ routes.post("/", (req, res, next) => {
     });
 });
 
+routes.delete("/:email", token.verifyToken, (req, res, next) => {
+  const email = req.params.email.trim();
+  const filter = { email: email };
+
+  const currentEmail = token.getDataFromToken(res.locals.token).payload.email;
+
+  if (currentEmail == email) {
+    return res.status(403).json({ message: "You can't delete yourself" });
+  } else {
+    User.findOneAndDelete(filter).then((result) => {
+      if (!result) {
+        return res.json({ message: "User not found" });
+      }
+      return res.json(result);
+    });
+  }
+});
+
 module.exports = routes;
