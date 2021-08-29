@@ -9,7 +9,7 @@ function getToken(email, id) {
     },
     secret.value,
     {
-      expiresIn: "1h",
+      expiresIn: "24h",
     }
   );
   return token;
